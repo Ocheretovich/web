@@ -1,6 +1,6 @@
 import type { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import type { TradeQuote, TradeQuoteStep } from '@shapeshiftoss/swapper'
-import { ZRC_PERMIT2_SOURCE_ID } from '@shapeshiftoss/swapper/dist/swappers/ZrxSwapper/utils/constants'
+import { SwapperName, type TradeQuote, type TradeQuoteStep } from '@shapeshiftoss/swapper'
+import { getConfig } from 'config'
 import { type AllowanceType, getApprovalAmountCryptoBaseUnit } from 'hooks/queries/useApprovalFees'
 import { approve } from 'lib/utils/evm/approve'
 
@@ -30,5 +30,7 @@ export const approveTrade = async ({
   return txHash
 }
 
-export const isPermit2Hop = (tradeQuoteStep: TradeQuoteStep | undefined) =>
-  tradeQuoteStep?.source === ZRC_PERMIT2_SOURCE_ID
+export const isPermit2Hop = (tradeQuoteStep: TradeQuoteStep | undefined) => {
+  const isPermit2Enabled = getConfig().REACT_APP_FEATURE_ZRX_PERMIT2
+  return isPermit2Enabled && tradeQuoteStep?.source === SwapperName.Zrx
+}
